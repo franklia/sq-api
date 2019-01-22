@@ -34,10 +34,15 @@ app.use((req, res, next) => {
   next();
 });
 
-// set the route path & initialize the API
-router.get('/edit', (req, res, next) => {
-  // this will return all the data, exposing only the id and action field to the client
+router.get('/questions/index', (req, res, next) => {
   QuizQuestion.find({})
+    .then(data => res.json(data))
+    .catch(next);
+});
+
+router.get('/questions/:id', (req, res, next) => {
+  // res.send(req.params);
+  QuizQuestion.find({ _id: req.params.id })
     .then(data => res.json(data))
     .catch(next);
 });
