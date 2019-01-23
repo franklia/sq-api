@@ -8,7 +8,7 @@ import QuizQuestion from './models/quiz_questions';
 // create instances
 const app = express();
 const router = express.Router();
-const corsOrigin = process.env.CORS_ORIGIN;
+// const corsOrigin = process.env.CORS_ORIGIN;
 
 
 // set our env variables
@@ -34,12 +34,14 @@ app.use((req, res, next) => {
   next();
 });
 
+// Get all questions
 router.get('/questions/index', (req, res, next) => {
   QuizQuestion.find({})
     .then(data => res.json(data))
     .catch(next);
 });
 
+// Get one specific question
 router.get('/questions/:id', (req, res, next) => {
   // res.send(req.params);
   QuizQuestion.find({ _id: req.params.id })
@@ -47,6 +49,7 @@ router.get('/questions/:id', (req, res, next) => {
     .catch(next);
 });
 
+// Add a question
 router.post('/create', (req, res, next) => {
   if (req.body) {
     QuizQuestion.create(req.body)
@@ -57,6 +60,14 @@ router.post('/create', (req, res, next) => {
       error: 'The input field is empty'
     });
   }
+});
+
+// Update a question
+router.post('/question/:id', (req, res, next) => {
+  QuizQuestion.findByIdAndUpdate(req.params.id, req.body, (err, post) => {
+    if (err) return next(err);
+    res.json(post);
+  });
 });
 
 // Use our router configuration when we call /api
