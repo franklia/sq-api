@@ -16,6 +16,10 @@ const QuizQuestionSchema = new Schema({
   answer: {
     type: String,
     required: [true, 'The answer text field is required']
+  },
+  status: {
+    type: Boolean,
+    default: false
   }
 }, {
   collection: 'quiz_questions'

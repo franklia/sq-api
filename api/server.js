@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 require('dotenv').config();
 import QuizQuestion from './models/quiz_questions';
+// import { inspect } from 'util';
 
 // create instances
 const app = express();
@@ -12,10 +13,11 @@ const router = express.Router();
 
 // set our env variables
 const API_PORT = process.env.API_PORT || 3001;
+const MONGO_DB = process.env.MONGODB_DEV || 3001;
 
 // connect to the database
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true })
-  .then(() => console.log(process.env.MONGODB_URI))
+mongoose.connect(MONGO_DB, { useNewUrlParser: true })
+  .then(() => console.log(MONGO_DB))
   .then(() => console.log('Database connected successfully'))
   .catch(err => console.log(err));
 
@@ -42,6 +44,51 @@ router.get('/questions/index', (req, res, next) => {
   QuizQuestion.find({})
     .then(data => res.json(data))
     .catch(next);
+});
+
+// Get all categories
+router.get('/questions/index/category', (req, res, next) => {
+  QuizQuestion.distinct('category')
+    .then(data => res.json(data))
+    .catch(next);
+});
+
+// Get one random test question
+router.get('/question/test/:category', (req, res, next) => {
+  const updateStatusToTrue = (randomQuestion) => {
+    QuizQuestion.findByIdAndUpdate(randomQuestion._id, { $set: { status: true } }, (err) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(randomQuestion);
+      }
+    });
+  };
+
+  const findRandomQuestion = () => {
+    QuizQuestion.find({ status: false, category: req.params.category })
+      .then((data) => {
+        // res.json(data);
+        if (data === undefined || data.length === 0) {
+          QuizQuestion.where({ status: true, category: req.params.category })
+            .updateMany({ $set: { status: false } })
+            .then();
+          // res.json('All questions have been tested and reset.');
+          findRandomQuestion();
+          // QuizQuestion.find({ status: false }).then((data) => {});
+        } else {
+          // console.log(data);
+          const randomQuestion = data[Math.floor(Math.random() * data.length)];
+          // console.log('This is the random item in array: ' + random);
+          // console.log(random._id);
+          // res.json(random);
+          updateStatusToTrue(randomQuestion);
+        }
+      })
+      .catch(next);
+  };
+
+  findRandomQuestion();
 });
 
 // Get one specific question
