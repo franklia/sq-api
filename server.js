@@ -13,7 +13,7 @@ const router = express.Router();
 
 // set our env variables
 const API_PORT = process.env.API_PORT || 3001;
-const MONGO_DB = process.env.MONGODB_DEV || 3001;
+const MONGO_DB = process.env.MONGODB_PROD || 3001;
 
 // connect to the database
 mongoose.connect(MONGO_DB, { useNewUrlParser: true })
