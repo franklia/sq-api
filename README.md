@@ -1,6 +1,8 @@
-# SPOT QUIZ
+# Spot Quiz api
 
-This app is designed to assist in learning the fundamentals of any subject matter via repetition. Enter your own questions and answers, then test yourself regularly using a random question generator.
+This React project is designed to work in unison with it's frontend UI found here: https://github.com/franklia/spot-quiz-frontend
+
+The app is designed to assist in learning the fundamentals of any subject matter via repetition. Enter your own questions and answers, then test yourself regularly using a random question generator.
 
 ## Getting Started
 
@@ -11,23 +13,18 @@ These instructions will get you a copy of the project up and running on your loc
 * NPM and Node.js
 * MongoDB
 
-### Installing
+### Installation
 
-A step by step series of examples that tell you how to get a development env running
+* `git clone https://github.com/franklia/spot-quiz-frontend.git`
+* `cd spot-quiz-frontend`
+* `npm install`
+* run `mongo`, then run `use <database-name>` to create a new database. You can repeat this step to create both a local and production database.
+* enter your database names into the .env file
 
-Say what the step will be
+### Available Scripts
 
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+In the project directory, you can run: `npm start`<br>
+This runs the app in development mode.
 
 ## Author
 

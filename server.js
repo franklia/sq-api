@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 require('dotenv').config();
 import QuizQuestion from './models/quiz_questions';
-// import { inspect } from 'util';
 
 // create instances
 const app = express();
@@ -32,12 +31,6 @@ app.use(bodyParser.json());
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
-
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN);
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   next();
-// });
 
 // Get all questions
 router.get('/questions/index', (req, res, next) => {
