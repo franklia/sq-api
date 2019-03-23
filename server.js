@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 require('dotenv').config();
-import QuizQuestion from './models/quiz_questions';
+import Questions from './models/questions';
 
 // create instances
 const app = express();
@@ -34,14 +34,14 @@ app.use(cors({
 
 // Get all questions
 router.get('/questions/index', (req, res, next) => {
-  QuizQuestion.find({})
+  Questions.find({})
     .then(data => res.json(data))
     .catch(next);
 });
 
 // Get all categories
 router.get('/questions/index/category', (req, res, next) => {
-  QuizQuestion.distinct('category')
+  Questions.distinct('category')
     .then(data => res.json(data))
     .catch(next);
 });
@@ -49,7 +49,7 @@ router.get('/questions/index/category', (req, res, next) => {
 // Get one random test question
 router.get('/question/test/:category', (req, res, next) => {
   const updateStatusToTrue = (randomQuestion) => {
-    QuizQuestion.findByIdAndUpdate(randomQuestion._id, { $set: { status: true } }, (err) => {
+    Questions.findByIdAndUpdate(randomQuestion._id, { $set: { status: true } }, (err) => {
       if (err) {
         res.json(err);
       } else {
@@ -59,11 +59,11 @@ router.get('/question/test/:category', (req, res, next) => {
   };
 
   const findRandomQuestion = () => {
-    QuizQuestion.find({ status: false, category: req.params.category })
+    Questions.find({ status: false, category: req.params.category })
       .then((data) => {
         // res.json(data);
         if (data === undefined || data.length === 0) {
-          QuizQuestion.where({ status: true, category: req.params.category })
+          Questions.where({ status: true, category: req.params.category })
             .updateMany({ $set: { status: false } })
             .then();
           // res.json('All questions have been tested and reset.');
@@ -86,7 +86,7 @@ router.get('/question/test/:category', (req, res, next) => {
 
 // Get one specific question
 router.get('/question/:id', (req, res, next) => {
-  QuizQuestion.find({ _id: req.params.id })
+  Questions.find({ _id: req.params.id })
     .then(data => res.json(data))
     .catch(next);
 });
@@ -94,7 +94,7 @@ router.get('/question/:id', (req, res, next) => {
 // Add a question
 router.post('/question/create', (req, res, next) => {
   if (req.body) {
-    QuizQuestion.create(req.body)
+    Questions.create(req.body)
       .then(data => res.json(data))
       .catch(next);
   } else {
@@ -106,7 +106,7 @@ router.post('/question/create', (req, res, next) => {
 
 // Update a question
 router.post('/question/:id', (req, res) => {
-  QuizQuestion.findByIdAndUpdate(req.params.id, req.body, (err) => {
+  Questions.findByIdAndUpdate(req.params.id, req.body, (err) => {
     if (err) {
       res.json(err);
     } else {
@@ -117,7 +117,7 @@ router.post('/question/:id', (req, res) => {
 
 // Delete a question
 router.delete('/question/delete/:id', (req, res) => {
-  QuizQuestion.findByIdAndDelete({ _id: req.params.id }, (err) => {
+  Questions.findByIdAndDelete({ _id: req.params.id }, (err) => {
     if (err) {
       res.json({
         reason: 'An error occurred, perhaps the id was not found?',
