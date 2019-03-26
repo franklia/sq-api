@@ -12,7 +12,7 @@ const router = express.Router();
 
 // set our env variables
 const API_PORT = process.env.API_PORT || 3001;
-const MONGO_DB = process.env.MONGODB_PROD || 3001;
+const MONGO_DB = process.env.MONGODB_DEV || 3001;
 
 // connect to the database
 mongoose.connect(MONGO_DB, { useNewUrlParser: true })
@@ -61,20 +61,15 @@ router.get('/question/test/:category', (req, res, next) => {
   const findRandomQuestion = () => {
     Questions.find({ status: false, category: req.params.category })
       .then((data) => {
-        // res.json(data);
+        // If there are no questions with a status === false, then change all questions in the
+        // category to false i.e the user has tested all questions and now needs to reset
         if (data === undefined || data.length === 0) {
           Questions.where({ status: true, category: req.params.category })
             .updateMany({ $set: { status: false } })
             .then();
-          // res.json('All questions have been tested and reset.');
           findRandomQuestion();
-          // QuizQuestion.find({ status: false }).then((data) => {});
         } else {
-          // console.log(data);
           const randomQuestion = data[Math.floor(Math.random() * data.length)];
-          // console.log('This is the random item in array: ' + random);
-          // console.log(random._id);
-          // res.json(random);
           updateStatusToTrue(randomQuestion);
         }
       })
