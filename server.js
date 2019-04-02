@@ -59,7 +59,7 @@ router.get('/question/test/:category', (req, res, next) => {
   };
 
   const findRandomQuestion = () => {
-    Questions.find({ status: false, category: req.params.category })
+    Questions.find({ status: false, category: req.params.category }).sort({ 'questions.position': 1 })
       .then((data) => {
         // If there are no questions with a status === false, then change all questions in the
         // category to false i.e the user has tested all questions and now needs to reset
