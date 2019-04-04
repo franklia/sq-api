@@ -29,6 +29,10 @@ const QuestionsSchema = new Schema({
     type: String,
     required: [true, 'The category text field is required']
   },
+  topic: {
+    type: String,
+    required: false
+  },
   questions: [NestedQuestionsSchema],
   status: {
     type: Boolean,
