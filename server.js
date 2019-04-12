@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 require('dotenv').config();
 import Questions from './models/questions';
+import Users from './models/users';
 
 // create instances
 const app = express();
@@ -34,16 +35,40 @@ app.use(cors({
 
 // Get all questions
 router.get('/questions/index', (req, res, next) => {
-  Questions.find({})
+  Questions.find({ auth0_id: req.query.userId })
     .then(data => res.json(data))
     .catch(next);
 });
 
 // Get all categories
 router.get('/questions/index/category', (req, res, next) => {
-  Questions.distinct('category')
-    .then(data => res.json(data))
-    .catch(next);
+  // This function retrieves all the inbuilt admin categories
+  Users.find({ auth0_id: process.env.AUTH0_ADMIN_ID })
+    .lean()
+    .select('categories')
+    .then(data => {
+      const adminCategories = data[0].categories.map(item => item.name);
+      res.adminCategories = adminCategories;
+      next();
+    });
+}, (req, res, next) => {
+  // This function retrieves all the users categories
+  if (req.query.userId !== 'auth0|5caa661e3ed4db10f8220b97') {
+    Users.find({ auth0_id: req.query.userId })
+      .lean()
+      .select('categories')
+      .then(data => {
+        const userCategories = data[0].categories.map(item => item.name);
+        res.userCategories = userCategories;
+      });
+  } else {
+    res.userCategories = [];
+  }
+  next();
+}, (req, res) => {
+  // Finally the data is packaged up and returned to the client
+  const categories = { adminCategories: res.adminCategories, userCategories: res.userCategories };
+  res.json(categories);
 });
 
 // Get one random test question
@@ -79,7 +104,7 @@ router.get('/question/test/:category', (req, res, next) => {
   findRandomQuestion();
 });
 
-// Get one specific question
+// Get one specific question (so that you can view it prior to updating it)
 router.get('/question/:id', (req, res, next) => {
   Questions.find({ _id: req.params.id })
     .then(data => res.json(data))
