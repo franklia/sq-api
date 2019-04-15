@@ -25,8 +25,12 @@ const NestedQuestionsSchema = new Schema({
 
 // create schema for Questions
 const QuestionsSchema = new Schema({
-  category: {
+  auth0_id: {
     type: String,
+    required: [true, 'The auth0 field is required']
+  },
+  category: {
+    type: Schema.Types.ObjectId,
     required: [true, 'The category text field is required']
   },
   topic: {
