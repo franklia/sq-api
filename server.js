@@ -113,7 +113,10 @@ router.get('/question/test/:category', (req, res, next) => {
 // Get one specific question (so that you can view it prior to updating it)
 router.get('/question/:id', (req, res, next) => {
   Questions.find({ _id: req.params.id })
-    .then(data => res.json(data))
+    .then(data => {
+      console.log(data);
+      res.json(data);
+    })
     .catch(next);
 });
 
