@@ -21,6 +21,9 @@ mongoose.connect(MONGO_DB, { useNewUrlParser: true })
   .then(() => console.log('Database connected successfully'))
   .catch(err => console.log(err));
 
+// This allows us to add Mongo ObjectId's to new records
+const ObjectId = mongoose.Types.ObjectId;
+
 // since mongoose promise is depreciated, we overide it with node's promise
 mongoose.Promise = global.Promise;
 
@@ -73,8 +76,24 @@ router.get('/questions/index/category', (req, res, next) => {
 // Get user categories only
 router.get('/user/categories', (req, res, next) => {
   Users.find({ auth0_id: req.query.auth0Id })
-    .then(data => res.json(data))
+    .then(data => {
+      // console.log(data);
+      res.json(data);
+    })
     .catch(next);
+});
+
+// Create a new category
+router.put('/user/category/create', (req, res) => {
+  const findBy = { auth0_id: req.body.auth0Id };
+  const updateValues = { $push: { categories: { _id: ObjectId(), name: req.body.categoryName } } };
+  Users.update(findBy, updateValues, (err) => {
+    if (err) {
+      res.json(err);
+    } else {
+      res.json();
+    }
+  });
 });
 
 // Get one random test question
