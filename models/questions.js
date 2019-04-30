@@ -47,6 +47,6 @@ const QuestionsSchema = new Schema({
 });
 
 // create model for QuizQuestion
-const Questions = mongoose.model('Questions', QuestionsSchema);
+const Questions = mongoose.model('Question', QuestionsSchema);
 
 module.exports = Questions;

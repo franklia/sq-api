@@ -77,23 +77,46 @@ router.get('/questions/index/category', (req, res, next) => {
 router.get('/user/categories', (req, res, next) => {
   Users.find({ auth0_id: req.query.auth0Id })
     .then(data => {
-      // console.log(data);
       res.json(data);
     })
     .catch(next);
 });
 
 // Create a new category
+
 router.put('/user/category/create', (req, res) => {
-  const findBy = { auth0_id: req.body.auth0Id };
-  const updateValues = { $push: { categories: { _id: ObjectId(), name: req.body.categoryName } } };
-  Users.update(findBy, updateValues, (err) => {
-    if (err) {
-      res.json(err);
-    } else {
-      res.json();
-    }
-  });
+  const saveUser = () => {
+    const findBy = { auth0_id: req.body.auth0Id };
+    const updateValues = { $push: { categories: { _id: ObjectId(), name: req.body.categoryName } } };
+    Users.update(findBy, updateValues, (error) => {
+      if (error) {
+        res.json(error);
+      } else {
+        res.json();
+      }
+    });
+  };
+
+  Users.findOne({ auth0_id: req.body.auth0Id }).select('_id').lean()
+    .then(data => {
+      if (data) {
+        saveUser();
+      } else {
+        // Create user record
+        const newUser = new Users({
+          auth0_id: req.body.auth0Id,
+          categories: []
+        });
+        // Then save data
+        newUser.save(err => {
+          if (err) {
+            res.json(err);
+          } else {
+            saveUser();
+          }
+        });
+      }
+    });
 });
 
 // Get one random test question
