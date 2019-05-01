@@ -83,9 +83,9 @@ router.get('/user/categories', (req, res, next) => {
 });
 
 // Create a new category
-
 router.put('/user/category/create', (req, res) => {
-  const saveUser = () => {
+  // Declare function to save new category
+  const saveCategories = () => {
     const findBy = { auth0_id: req.body.auth0Id };
     const updateValues = { $push: { categories: { _id: ObjectId(), name: req.body.categoryName } } };
     Users.update(findBy, updateValues, (error) => {
@@ -99,8 +99,9 @@ router.put('/user/category/create', (req, res) => {
 
   Users.findOne({ auth0_id: req.body.auth0Id }).select('_id').lean()
     .then(data => {
+      // Check if a user exists
       if (data) {
-        saveUser();
+        saveCategories();
       } else {
         // Create user record
         const newUser = new Users({
@@ -112,11 +113,37 @@ router.put('/user/category/create', (req, res) => {
           if (err) {
             res.json(err);
           } else {
-            saveUser();
+            saveCategories();
           }
         });
       }
     });
+});
+
+// Update a category
+router.put('/user/category/update', (req, res) => {
+  const findBy = { auth0_id: req.body.auth0Id, 'categories._id': req.body.updateOrDeleteCategoryId };
+  const updateValues = { $set: { 'categories.$.name': req.body.updateCategoryName } };
+  Users.update(findBy, updateValues, (error) => {
+    if (error) {
+      res.json(error);
+    } else {
+      res.json();
+    }
+  });
+});
+
+// Detete a category
+router.put('/user/category/delete', (req, res) => {
+  const findBy = { auth0_id: req.body.auth0Id };
+  const updateValues = { $pull: { categories: { _id: req.body.updateOrDeleteCategoryId } } };
+  Users.update(findBy, updateValues, (error) => {
+    if (error) {
+      res.json(error);
+    } else {
+      res.json();
+    }
+  });
 });
 
 // Get one random test question
