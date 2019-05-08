@@ -39,9 +39,44 @@ app.use(cors({
 // Get all questions
 router.get('/questions/index', (req, res, next) => {
   Questions.find({ auth0_id: req.query.userId })
-    .then(data => res.json(data))
+    .then(data => {
+      res.questions = data;
+      next();
+    });
+}, (req, res, next) => {
+  Users.find({ auth0_id: req.query.userId })
+    .lean()
+    .select('categories')
+    .then(data => {
+      const userCategories = data[0].categories;
+      const dataArray = [];
+
+      // For each question returned from the first section of the query...
+      res.questions.forEach((element) => {
+        // Get the category id
+        const categoryId = element.category;
+        // Then locate the category object
+        const categoryObject = userCategories.find((cat) => {
+          return cat._id.toString() === categoryId.toString();
+        });
+        // Create a new unified object containing all the relevant info
+        const object = {
+          _id: element.id,
+          status: element.status,
+          auth0_id: element.auth0_id,
+          categoryId: categoryObject._id,
+          categoryName: categoryObject.name,
+          questions: element.questions
+        }
+        // Push each object into an array
+        dataArray.push(object);
+      });
+
+      res.send(dataArray);
+    })
     .catch(next);
 });
+
 
 // Get both user and admin categories
 router.get('/questions/index/category', (req, res, next) => {
