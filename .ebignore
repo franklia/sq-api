@@ -1,0 +1,5 @@
+# Exclude from Elastic Beanstalk
+.babelrc
+.eslintrc
+.git
+node_modules

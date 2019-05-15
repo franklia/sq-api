@@ -12,12 +12,12 @@ const app = express();
 const router = express.Router();
 
 // set our env variables
-const API_PORT = process.env.API_PORT || 3001;
-const MONGO_DB = process.env.MONGODB_DEV || 3001;
+const API_PORT = process.env.API_PORT;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // connect to the database
-mongoose.connect(MONGO_DB, { useNewUrlParser: true })
-  .then(() => console.log(MONGO_DB))
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
+  .then(() => console.log(MONGODB_URI))
   .then(() => console.log('Database connected successfully'))
   .catch(err => console.log(err));
 
