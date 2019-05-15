@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run clean && babel src --out-dir dist",
     "clean": "rimraf dist",
-    "predeploy": "npm run build",
+    "predeploy": "npm install && npm run build",
     "deploy": "eb deploy",
     "postdeploy": "npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1",
