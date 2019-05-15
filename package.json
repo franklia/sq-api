@@ -4,14 +4,14 @@
   "description": "API for Spot Quiz app",
   "main": "server.js",
   "scripts": {
-    "build": "npm run clean && babel -d build",
-    "clean": "rm -rf build",
+    "build": "npm run clean && babel ./src --out-dir dist",
+    "clean": "rm -rf dist",
     "predeploy": "npm run build",
     "deploy": "eb deploy",
     "postdeploy": "npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node start.js",
-    "start-dev": "nodemon start"
+    "start": "npm run build && node dist/server.js",
+    "dev": "nodemon dist/server.js"
   },
   "author": "Frank Liardet",
   "license": "MIT",
@@ -27,8 +27,9 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.4",
     "babel-eslint": "^10.0.1",
-    "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "eslint": "^5.11.1",
     "eslint-config-airbnb-base": "^13.1.0",
