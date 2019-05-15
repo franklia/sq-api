@@ -1,5 +1,4 @@
 # Exclude from Elastic Beanstalk
-.babelrc
 .eslintrc
 .git
 .env
