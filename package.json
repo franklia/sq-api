@@ -10,8 +10,8 @@
     "deploy": "eb deploy",
     "postdeploy": "npm run clean",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && node dist/server.js",
-    "dev": "nodemon dist/server.js"
+    "start": "node dist/server.js",
+    "dev": "npm run clean && ./node_modules/.bin/babel src --out-dir dist && nodemon dist/server.js"
   },
   "author": "Frank Liardet",
   "license": "MIT",
