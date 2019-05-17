@@ -77,35 +77,31 @@ router.get('/questions/index', (req, res, next) => {
     .catch(next);
 });
 
-
-// Get both user and admin categories
-router.get('/questions/index/category', (req, res, next) => {
-  // This function retrieves all the inbuilt admin categories
+// Get inbuilt admin categories
+router.get('/questions/index/admin/categories', (req, res, next) => {
   Users.find({ auth0_id: process.env.AUTH0_ADMIN_ID })
     .lean()
     .select('categories')
     .then(data => {
       res.adminCategories = data[0].categories;
-      next();
-    });
-}, (req, res, next) => {
-  // This function retrieves all the users categories
-  if (req.query.userId !== process.env.AUTH0_ADMIN_ID) {
-    Users.find({ auth0_id: req.query.userId })
-      .lean()
-      .select('categories')
-      .then(data => {
-        const userCategories = data[0].categories.map(item => item.name);
-        res.userCategories = userCategories;
-      });
-  } else {
-    res.userCategories = [];
-  }
-  next();
-}, (req, res) => {
-  // Finally the data is packaged up and returned to the client
-  console.log({ adminCategories: res.adminCategories, userCategories: res.userCategories });
-  res.json({ adminCategories: res.adminCategories, userCategories: res.userCategories });
+      console.log(res.adminCategories);
+      res.json(res.adminCategories);
+    })
+    .catch(next);
+});
+
+// Get both user and admin categories
+router.get('/questions/index/user/categories', (req, res, next) => {
+  Users.find({ auth0_id: req.query.userId })
+    .lean()
+    .select('categories')
+    .then(data => {
+      const userCategories = data[0].categories.map(item => item.name);
+      res.userCategories = userCategories;
+      console.log(res.userCategories);
+      res.json(res.userCategories);
+    })
+    .catch(next);
 });
 
 // Get user categories only
@@ -116,6 +112,51 @@ router.get('/user/categories', (req, res, next) => {
     })
     .catch(next);
 });
+
+// // Get both user and admin categories
+// router.get('/questions/index/category', (req, res, next) => {
+//   // This function retrieves all the inbuilt admin categories
+//   console.log('Hey');
+//   Users.find({ auth0_id: process.env.AUTH0_ADMIN_ID })
+//     .lean()
+//     .select('categories')
+//     .then(data => {
+//       res.adminCategories = data[0].categories;
+//       console.log(res.adminCategories);
+//       // console.log('Done');
+//       next();
+//     });
+// }, (req, res, next) => {
+//   // This function retrieves all the users categories
+//   if (req.query.userId !== process.env.AUTH0_ADMIN_ID) {
+//     Users.find({ auth0_id: req.query.userId })
+//       .lean()
+//       .select('categories')
+//       .then(data => {
+//         const userCategories = data[0].categories.map(item => item.name);
+//         res.userCategories = userCategories;
+//         console.log(res.userCategories);
+//       });
+//   } else {
+//     res.userCategories = [];
+//     console.log('else statement');
+//   }
+//   next();
+// }, (req, res) => {
+//   // Finally the data is packaged up and returned to the client
+//   // console.log('Hey');
+//   console.log({ adminCategories: res.adminCategories, userCategories: res.userCategories });
+//   res.json({ adminCategories: res.adminCategories, userCategories: res.userCategories });
+// });
+//
+// // Get user categories only
+// router.get('/user/categories', (req, res, next) => {
+//   Users.find({ auth0_id: req.query.auth0Id })
+//     .then(data => {
+//       res.json(data);
+//     })
+//     .catch(next);
+// });
 
 // Create a new category
 router.put('/user/category/create', (req, res) => {
