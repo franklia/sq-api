@@ -36,6 +36,11 @@ app.use(cors({
   origin: 'http://localhost:3000'
 }));
 
+// Test route
+router.get('/test', (req, res) => {
+  res.send('The Spot Quiz API is working!');
+});
+
 // Get all questions
 router.get('/questions/index', (req, res, next) => {
   Questions.find({ auth0_id: req.query.userId })
@@ -78,7 +83,7 @@ router.get('/questions/index', (req, res, next) => {
 });
 
 // Get inbuilt admin categories
-router.get('/questions/index/admin/categories', (req, res, next) => {
+router.get('/admin/categories', (req, res, next) => {
   Users.find({ auth0_id: process.env.AUTH0_ADMIN_ID })
     .lean()
     .select('categories')
@@ -89,6 +94,17 @@ router.get('/questions/index/admin/categories', (req, res, next) => {
     })
     .catch(next);
 });
+// router.get('/questions/index/admin/categories', (req, res, next) => {
+//   Users.find({ auth0_id: process.env.AUTH0_ADMIN_ID })
+//     .lean()
+//     .select('categories')
+//     .then(data => {
+//       res.adminCategories = data[0].categories;
+//       console.log(res.adminCategories);
+//       res.json(res.adminCategories);
+//     })
+//     .catch(next);
+// });
 
 // Get both user and admin categories
 router.get('/questions/index/user/categories', (req, res, next) => {
