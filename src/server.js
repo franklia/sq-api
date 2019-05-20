@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 
 // Enable CORS
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: process.env.CORS_ORIGIN
 }));
 
 // Test route
