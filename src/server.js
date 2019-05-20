@@ -12,7 +12,7 @@ const app = express();
 const router = express.Router();
 
 // set our env variables
-const API_PORT = process.env.API_PORT;
+const PORT = process.env.PORT || 3001;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // connect to the database
@@ -322,4 +322,4 @@ router.delete('/question/delete/:id', (req, res) => {
 // Use our router configuration when we call /api
 app.use('/api', router);
 
-app.listen(API_PORT, () => console.log('Listening on port ' + API_PORT));
+app.listen(PORT, () => console.log('Listening on port ' + PORT));
