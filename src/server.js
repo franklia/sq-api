@@ -45,8 +45,14 @@ router.get('/test', (req, res) => {
 router.get('/questions/index', (req, res, next) => {
   Questions.find({ auth0_id: req.query.userId })
     .then(data => {
-      res.questions = data;
-      next();
+      if (data.length === 0) {
+        res.json(data);
+      } else {
+        console.log('There is data.');
+        console.log(data);
+        res.questions = data;
+        next();
+      }
     });
 }, (req, res, next) => {
   Users.find({ auth0_id: req.query.userId })
