@@ -101,7 +101,7 @@ router.get('/admin/categories', (req, res, next) => {
 
 // Get user categories
 router.get('/user/categories', (req, res, next) => {
-  Users.find({ auth0_id: req.query.userId })
+  Users.find({ auth0_id: req.query.auth0Id })
     .lean()
     .select('categories')
     .then(data => {
@@ -111,15 +111,6 @@ router.get('/user/categories', (req, res, next) => {
     })
     .catch(next);
 });
-
-// Get user categories only
-// router.get('/user/categories', (req, res, next) => {
-//   Users.find({ auth0_id: req.query.auth0Id })
-//     .then(data => {
-//       res.json(data);
-//     })
-//     .catch(next);
-// });
 
 // Create a new category
 router.put('/user/category/create', (req, res) => {
