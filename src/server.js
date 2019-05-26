@@ -178,6 +178,15 @@ router.put('/user/category/delete', (req, res) => {
 
 // Get one random test question
 router.get('/question/test/:category', (req, res, next) => {
+  Questions.find({ category: req.params.category })
+    .then(data => {
+      if (data.length === 0) {
+        res.json(data);
+      } else {
+        next();
+      }
+    });
+}, (req, res, next) => {
   const updateStatusToTrue = (randomQuestion) => {
     Questions.findByIdAndUpdate(randomQuestion._id, { $set: { status: true } }, (err) => {
       if (err) {
@@ -187,7 +196,6 @@ router.get('/question/test/:category', (req, res, next) => {
       }
     });
   };
-
   const findRandomQuestion = () => {
     Questions.find({ status: false, category: req.params.category }).sort({ 'questions.position': 1 })
       .then((data) => {
@@ -205,7 +213,6 @@ router.get('/question/test/:category', (req, res, next) => {
       })
       .catch(next);
   };
-
   findRandomQuestion();
 });
 
