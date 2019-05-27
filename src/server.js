@@ -86,7 +86,7 @@ router.get('/questions/index', (req, res, next) => {
     .catch(next);
 });
 
-// Get inbuilt admin categories
+// Get inbuilt system generated categories
 router.get('/admin/categories', (req, res, next) => {
   Users.find({ auth0_id: process.env.AUTH0_ADMIN_ID })
     .lean()
@@ -99,7 +99,7 @@ router.get('/admin/categories', (req, res, next) => {
     .catch(next);
 });
 
-// Get user categories
+// Get user generated categories
 router.get('/user/categories', (req, res, next) => {
   Users.find({ auth0_id: req.query.auth0Id })
     .lean()
@@ -178,6 +178,7 @@ router.put('/user/category/delete', (req, res) => {
 
 // Get one random test question
 router.get('/question/test/:category', (req, res, next) => {
+  // first, check if the category has any questions and abort if none exist
   Questions.find({ category: req.params.category })
     .then(data => {
       if (data.length === 0) {
@@ -186,7 +187,9 @@ router.get('/question/test/:category', (req, res, next) => {
         next();
       }
     });
+// if category has questions, continue executing
 }, (req, res, next) => {
+  // function which changes status once the question has been asked
   const updateStatusToTrue = (randomQuestion) => {
     Questions.findByIdAndUpdate(randomQuestion._id, { $set: { status: true } }, (err) => {
       if (err) {
@@ -196,6 +199,7 @@ router.get('/question/test/:category', (req, res, next) => {
       }
     });
   };
+  // function to find one random questions from a specific category
   const findRandomQuestion = () => {
     Questions.find({ status: false, category: req.params.category }).sort({ 'questions.position': 1 })
       .then((data) => {
