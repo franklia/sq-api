@@ -92,9 +92,9 @@ router.get('/admin/categories', (req, res, next) => {
     .lean()
     .select('categories')
     .then(data => {
-      res.adminCategories = data[0].categories;
-      console.log(res.adminCategories);
-      res.json(res.adminCategories);
+      // res.adminCategories = data[0].categories;
+      // console.log(res.adminCategories);
+      res.json(data);
     })
     .catch(next);
 });
@@ -105,9 +105,7 @@ router.get('/user/categories', (req, res, next) => {
     .lean()
     .select('categories')
     .then(data => {
-      res.userCategories = data[0].categories;
-      console.log(res.userCategories);
-      res.json(res.userCategories);
+      res.json(data);
     })
     .catch(next);
 });
