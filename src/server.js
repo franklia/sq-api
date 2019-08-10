@@ -80,7 +80,7 @@ router.get('/questions/index', (req, res, next) => {
         // Push each object into an array
         dataArray.push(object);
       });
-
+      dataArray.reverse();
       res.send(dataArray);
     })
     .catch(next);
