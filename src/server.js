@@ -242,7 +242,7 @@ router.post('/question/create', (req, res, next) => {
 });
 
 // Update a question
-router.post('/question/:id', (req, res) => {
+router.put('/question/:id', (req, res) => {
   console.log(req.params.id);
   console.log(req.body);
   Questions.findOneAndUpdate({ _id: req.params.id }, req.body, (err) => {
