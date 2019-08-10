@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3001;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // connect to the database
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useFindAndModify: false })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
   .then(() => console.log(MONGODB_URI))
   .then(() => console.log('Database connected successfully'))
   .catch(err => console.log(err));
@@ -243,13 +243,22 @@ router.post('/question/create', (req, res, next) => {
 
 // Update a question
 router.post('/question/:id', (req, res) => {
-  Questions.findByIdAndUpdate(req.params.id, req.body, (err) => {
+  console.log(req.params.id);
+  console.log(req.body);
+  Questions.findOneAndUpdate({ _id: req.params.id }, req.body, (err) => {
     if (err) {
       res.json(err);
     } else {
       res.json('Successfully updated');
     }
   });
+  // Questions.findByIdAndUpdate(req.params.id, req.body, (err) => {
+  //   if (err) {
+  //     res.json(err);
+  //   } else {
+  //     res.json('Successfully updated');
+  //   }
+  // });
 });
 
 // Delete a question
