@@ -1,12 +1,16 @@
 {
-    "extends": "airbnb-base/legacy",
-    "env": {
-        "es6": true
-    },
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "sourceType": "module",
-      "allowImportExportEverywhere": false,
-      "codeFrame": true
-    }
+  "extends": ["prettier"],
+  "plugins": ["prettier"],
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": true
+  }
 }
