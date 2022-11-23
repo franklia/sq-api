@@ -23,7 +23,7 @@ mongoose
   .then(() => console.log('Database connected successfully'))
   .catch((err) => console.log(err));
 
-// This allows us to add Mongo ObjectId's to new records
+// this allows us to add Mongo ObjectId's to new records
 const ObjectId = mongoose.Types.ObjectId;
 
 // since mongoose promise is depreciated, we overide it with node's promise
@@ -41,9 +41,9 @@ app.use(
 );
 
 // Test route
-// router.get('/test', (req, res) => {
-//   res.send('The Spot Quiz API is working so far');
-// });
+router.get('/test', (req, res) => {
+  res.send('The Spot Quiz API is working...');
+});
 
 // Get all questions
 router.get(
@@ -295,9 +295,6 @@ router.delete('/question/delete/:id', (req, res) => {
   });
 });
 
-// Use our router configuration when we call /api
-// app.use('/api', router);
-
-// console.log('app routes', router.stack);
+app.use('/', router);
 
 app.listen(PORT, () => console.log('Listening on port ' + PORT));
